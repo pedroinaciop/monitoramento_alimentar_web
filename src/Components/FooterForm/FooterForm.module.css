@@ -1,0 +1,26 @@
+@import url("../../App.css");
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.updates {
+  display: flex;
+  gap: 1.563rem;
+}
+
+#includeDate{
+  width: 50%;
+}
+
+#updateDate {
+  width: 200%;
+}
+
+.footer input {
+  background-color: var( --light-gray);
+  width: 90%;
+}

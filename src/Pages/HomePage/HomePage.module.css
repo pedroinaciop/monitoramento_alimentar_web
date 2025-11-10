@@ -1,0 +1,208 @@
+@import url("../../App.css");
+
+.mainContent {
+  padding: 1.25em 1.25em 0.125em 1.25em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.header {
+  gap: 1.25em;
+  display: flex;
+  flex-direction: column;
+}
+
+.header h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+}
+
+.header p {
+  align-self: normal;
+}
+
+.card {
+  width: 23%;
+  gap: 1.25em;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.11);
+}
+
+.progressBar {
+  width: 60%;
+  height: 10px;
+  align-self: center;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #EE785F;
+}
+
+.imcContainer {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border-radius: 10px;
+
+  padding: 1.2rem 0rem;
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+}
+
+.imcHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.imcTitulo {
+  align-items: center;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.imcValor {
+  font-size: 4.5rem;
+  font-weight: 500;
+}
+
+.infoIcon {
+  width: 20px;
+  height: 20px;
+  margin-left: 0.9rem;
+  align-items: end;
+  cursor: pointer;
+}
+
+.imcBar {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(
+    to right,
+    #26e6f4 0%,     
+    #26e6f4 20%,
+    #35f300 40%,  
+    #35f300 40%,
+    #ffee71 45%,   
+    #ffee71 48%,
+    #ff9809 52%,    
+    #ff9809 56%,
+    #ff090d 59%,  
+    #ff090d 60%,
+    #9701b9 70%,    
+    #9701b9 100%
+  );
+}
+
+.imcMarker {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 16px;
+  background-color: black;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+}
+
+.listaCategoriasIMC {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.itemCategoria {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  height: 50px;
+  width: 55%; 
+  text-align: center;
+}
+
+.itemCategoriaSelected {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.tipoCategoria {
+  flex: 1;
+  text-align: left;
+  font-weight: 500;
+}
+
+.valoresCategoria {
+  flex: 1;
+  text-align: right;
+  font-weight: 500;
+  margin-right: 25px;
+}
+
+.primeiroItemCategoria {
+  width: 20px;
+  height:20px;
+  background-color: #26E6F4;
+  border: 1px solid rgba(0, 0, 0, 0.259);
+  border-radius: 50%;
+  margin: 50px;
+}
+
+.segundoItemCategoria {
+  width: 20px;
+  height:20px;
+  background-color: #35F300;
+  border: 1px solid rgba(0, 0, 0, 0.259);
+  border-radius: 50%;
+  margin: 50px;
+}
+
+.terceiroItemCategoria {
+  width: 20px;
+  height:20px;
+  background-color: #FFEE71;
+  border: 1px solid rgba(0, 0, 0, 0.259);
+  border-radius: 50%;
+  margin: 50px;
+}
+
+.quartoItemCategoria {
+  width: 20px;
+  height:20px;
+  background-color: #FF9809;
+  border: 1px solid rgba(0, 0, 0, 0.259);
+  border-radius: 50%;
+  margin: 50px;
+}
+
+.quintoItemCategoria {
+  width: 20px;
+  height:20px;
+  background-color: #FF090D;
+  border: 1px solid rgba(0, 0, 0, 0.259);
+  border-radius: 50%;
+  margin: 50px;
+}
+
+.sextoItemCategoria {
+  width: 20px;
+  height:20px;
+  background-color: #9701B9;
+  border: 1px solid rgba(0, 0, 0, 0.259);
+  border-radius: 50%;
+  margin: 50px;
+}
+
+.imcBarContainer {
+  position: relative;
+  width: 80%;
+  height: 10px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}

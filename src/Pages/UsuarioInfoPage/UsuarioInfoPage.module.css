@@ -1,0 +1,51 @@
+@import url("../../App.css");
+
+.mainContent {
+  padding: 1.25em 1.25em 0.125em 1.25em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.25em;
+}
+
+.header {
+  gap: 1.25em;
+  display: flex;
+  flex-direction: row;
+}
+
+.header h1 {
+  font-size: 1.875rem;
+  font-weight: bold;
+}
+
+.header p {
+  font-size: var(--fontPadrao);
+  align-self: center;
+}
+
+.functions {
+  height: 40px;
+  padding: 0.75em;
+  gap: 1.25em;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.functions .buttons .button {
+  margin: 0em 0.625em;
+  background-color: var(--mainColor);
+}
+
+.functions .buttons .button:hover {
+  background-color: var(--activeButton);
+}
+
+.functions .input {
+  width: 15.625em;
+  align-self: center;
+}

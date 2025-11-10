@@ -1,0 +1,46 @@
+@import url("../../App.css");
+
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  padding: 1.25rem 1.25rem 0.125rem 1.25rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+#dataNascimentoCampo, #idadeCampo, #sexoBiologicoCampo,
+#doencasPreExistentesCampo, #alergiasCampo, #intoleranciasCampo {
+  width: 31%;
+  font-size: var(--fontPadrao);
+}
+
+#nivelAtividadeFisicaCampo, #caracteristicaAlimentarCampo {
+  width: 48%;
+}
+
+#objetivoCampo {
+  width: 100%;
+}
+
+.obrigatorio {
+  color: var(--red);
+}
+
+.errorMessage {
+  height: 0rem;
+  color: var(--red);
+  font-size: var(--fontPadrao);
+  position: relative;
+  top: 0.125rem;
+}

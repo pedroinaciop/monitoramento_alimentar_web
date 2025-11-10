@@ -1,0 +1,49 @@
+.appContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+    padding: 1.25rem 1.25rem 0.125rem 1.25rem;
+  }
+  
+  .tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+  }
+
+  .titleHeader {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+   .backButton {
+    height: 30px;
+ 
+  }
+
+  .btnVoltar {
+    border: 0px;
+    box-shadow: 0px;
+  }
+   
+  .header h1 {
+    font-size: var(--headerFont);
+  }
+  
+  .header p {
+    color: var(--red);
+    font-size: var(--fontPadrao);
+  }
+  
+  .contextForm {
+    height: 465px;
+  }
