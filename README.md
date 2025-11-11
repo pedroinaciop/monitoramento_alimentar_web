@@ -108,7 +108,7 @@ cd backend
 mvn spring-boot:run
 ```
 
-### 🖥️ Back-End
+### 🖥️ Front-End
 ```bash
 
 # Entrar na pasta do front-end
@@ -121,9 +121,9 @@ npm install
 npm start
 ```
 
---
+---
 
-##🖼️ Prints do Sistema
+## 🖼️ Prints do Sistema
 
 	Tela de autenticação de usuários
 
@@ -133,13 +133,13 @@ npm start
 
 	Gráfico de evolução do IMC e peso ao longo do tempo
 
---
+---
 
-##📈 Resultados Esperados
+## 📈 Resultados Esperados
 
 Com a implantação do sistema, espera-se que o usuário consiga acompanhar de forma prática e visual a evolução de suas medidas corporais e hábitos alimentares, utilizando os indicadores apresentados como apoio para uma rotina mais saudável e equilibrada.
 
-##📚 Referências Bibliográficas
+## 📚 Referências Bibliográficas
 
 WALLS, Craig. Spring Boot in Action. Manning Publications, 2016.
 React Documentation. Disponível em: https://react.dev
