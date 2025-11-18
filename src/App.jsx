@@ -32,8 +32,8 @@ function App() {
 
                   <Route path="/home" element={<HomePage/>} />
                   
-                  <Route path="/cadastros/usuarios" element={<UserPage/>} />
-                  <Route path="/cadastros/usuarios/novo" element={<UserForm/>} />
+                  <Route path="/usuario" element={<UserPage/>} />
+                  <Route path="/editar/usuario/:id" element={<UserForm/>} />
 
                   <Route path="/info/usuario/" element={<UsuarioInfoPage/>} />
                   <Route path="/info/usuario/novo" element={<UsuarioInfoForm/>} />

@@ -1,28 +1,54 @@
 import { DownloadOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { NavLink, useNavigate } from "react-router-dom";
-import { ConfigProvider, Input, Button } from "antd";
-import { confirmDelete } from "../../utils/delete";
 import { downloadExcel } from "../../utils/downloadExcel";
+import { NavLink, useNavigate } from "react-router-dom";
+import { ConfigProvider, Input, Button, Grid, Modal } from "antd";
 import styled from "./MedidasPage.module.css";
 import ProTable from "@ant-design/pro-table";
 import { useState, useEffect } from "react";
 import ptBR from "antd/lib/locale/pt_BR";
 import { useSnackbar } from "notistack";
 import api from "../../services/api";
-import { Grid } from "antd";
+
+const deleteRegistro = async (id, setList, path, enqueueSnackbar) => {
+  try {
+    await api.delete(`${path}${id}`);
+    setList((prev) => prev.filter((item) => item.id !== id));
+    enqueueSnackbar("Deletado com sucesso!", { 
+      variant: "success", 
+      anchorOrigin: { vertical: "bottom", horizontal: "right" } 
+    });
+  } catch (error) {
+    enqueueSnackbar(error, "Erro ao deletar registro!", { 
+      variant: "error", 
+      anchorOrigin: { vertical: "bottom", horizontal: "right" } 
+    });
+  }
+};
 
 const MedidasPage = () => {
+  const { useBreakpoint } = Grid;
   const navigate = useNavigate();
+  const screens = useBreakpoint();
   const { enqueueSnackbar } = useSnackbar();
   const [medidas, setMedidas] = useState([]);
   const [keywords, setKeywords] = useState("");
+  const [modal, contextHolder] = Modal.useModal();
   const usuario_id = sessionStorage.getItem("usuario_id");
-  const { useBreakpoint } = Grid;
-  const screens = useBreakpoint();
+
+  const handleConfirmDelete = (id, setList, path, enqueueSnackbar) => {
+    modal.confirm({
+      title: "Confirmar exclusão",
+      content: "Tem certeza que deseja deletar esse registro?",
+      okText: "Sim",
+      okType: "danger",
+      cancelText: "Não",
+      onOk: () => deleteRegistro(id, setList, path, enqueueSnackbar),
+    });
+  };
 
   const columns = [
-    { title: "DATA DE REGISTRO", dataIndex: "dataRegistro", width: 160 },
-    { title: "PESO ATUAL", dataIndex: "pesoAtual", responsive: ['sm'] },
+    { title: "DATA DE REGISTRO", dataIndex: "dataRegistro", width: screens.sm ? 200 : 155},
+    { title: "PESO ATUAL", dataIndex: "pesoAtual", responsive: ['sm']},
     { title: "PESO DESEJADO", dataIndex: "pesoDesejado", responsive: ['sm']},
     { title: "ALTURA", dataIndex: "altura", responsive: ['lg']},
     {
@@ -31,12 +57,12 @@ const MedidasPage = () => {
                 screens.md ? (
                     <div className={styled.botoesGrid}>
                     <Button key="editar" onClick={() => navigate(`/editar/medidas/${row.id}`)} icon={<EditOutlined />}>Editar</Button>
-                    <Button key="deletar" href={`/medida/${row.id}`} onClick={(e) => {e.preventDefault(confirmDelete(row.id, setMedidas, "/medida/", enqueueSnackbar))}} icon={<DeleteOutlined />}>Deletar</Button>
+                    <Button key="deletar" onClick={() => handleConfirmDelete(row.id, setMedidas, "/medida/", enqueueSnackbar)} icon={<DeleteOutlined />}>Deletar</Button>
                     </div>
                 ) : (
                     <div className={styled.botoesGrid}>
                       <Button key="editar" onClick={() => navigate(`/editar/medidas/${row.id}`)} icon={<EditOutlined />}></Button>
-                      <Button key="deletar" href={`/medida/${row.id}`} onClick={(e) => {e.preventDefault(confirmDelete(row.id, setMedidas, "/medida/", enqueueSnackbar))}} icon={<DeleteOutlined />}></Button>
+                      <Button key="deletar" onClick={() => handleConfirmDelete(row.id, setMedidas, "/medida/", enqueueSnackbar)} icon={<DeleteOutlined />}></Button>
                     </div>
                 )
                 
@@ -66,7 +92,7 @@ const MedidasPage = () => {
       .catch(function (error) {
         console.error("Erro:", error);
       });
-  }, []);
+  }, [usuario_id]);
 
   return (
     <>
@@ -97,6 +123,7 @@ const MedidasPage = () => {
         </div>
       </section>
       <ConfigProvider locale={ptBR}>
+        {contextHolder}
         <ProTable
           rowKey="id"
           size="large"

@@ -36,3 +36,16 @@
   position: relative;
   top: 0.125rem;
 }
+
+@media (max-width: 767px) {
+  .row {
+    flex-direction: column;
+    padding: 1rem 1.25rem 0.125rem 1.25rem;
+    gap: 1rem;
+  }
+
+  #fullNameField,  #emailField, #passwordField, #confirmPasswordField {
+      width: 100%;
+  }
+}
+

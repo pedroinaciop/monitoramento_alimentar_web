@@ -3,7 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import HeaderForm from '../../Components/HeaderForm';
 import FooterForm from '../../Components/FooterForm';
 import InputField from '../../Components/InputField';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import styled from './UserForm.module.css';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
@@ -11,10 +12,13 @@ import api from '../../services/api'
 import { z } from 'zod';
 
 const UserForm = () => {
+    const { id } = useParams();
     const updateDate = new Date();
-    const formattedDate = `${updateDate.toLocaleDateString('pt-BR')} ${updateDate.toLocaleTimeString('pt-BR')}`;
-    const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
+    const [loading, setLoading] = useState(false);
+    const usuario_id = sessionStorage.getItem("usuario_id");
+     const formattedDateTime = `${updateDate.toLocaleDateString('pt-BR')} ${updateDate.toLocaleTimeString('pt-BR')}`;
 
     const createUserFormSchema = z.object({
         nomeCompleto: z.string()
@@ -32,20 +36,16 @@ const UserForm = () => {
             .email('Formato de e-mail inválido'),
 
         senha: z.string()
-            .nonempty("A senha é obrigatória")
-            .min(6, "A senha precisa de no mínimo 6 caracteres")
             .max(64, "A senha não pode ultrapassar 64 caracteres"),
 
         confirmarSenha: z.string()
-            .nonempty("A confirmação da senha é obrigatória")
-            .min(6, "A senha precisa de no mínimo 6 caracteres")
             .max(64, "A senha não pode ultrapassar 64 caracteres"),
     }).refine(data => data.senha === data.confirmarSenha, {
         message: "As senhas não conferem",
         path: ["confirmarSenha"]
     });
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
         resolver: zodResolver(createUserFormSchema),
     });
 
@@ -55,54 +55,76 @@ const UserForm = () => {
         }
     };
 
-    const createUser = (data) => {
-        api.post('cadastros/usuarios/novo', {
-            nomeCompletome: data.nomeCompleto,
-            email: data.email,
+    const editUsuario = (data) => {
+        api.put(`/editar/usuario/${id}`, {
+            nomeCompleto: data.nomeCompleto,
             senha: data.senha,
-            updateDate: formattedDate,
-            updateUser: "ADM",
+            dataUpdate: formattedDateTime,
         }, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(function () {
-            enqueueSnackbar("Cadastro realizado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right" }});
-            navigate('/cadastros/usuarios')
-        })
-        .catch(function (error) {
+        .then(function() {
+            enqueueSnackbar("Cadastro editado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+            navigate('/usuario');
+        }).catch(function(error) {
             if (api.isAxiosError(error)) {
                 if (error.response) {
-                    enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error" });
+                    enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
                 } else if (error.request) {
-                    enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning" });
+                    enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
                 } else {
-                    enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error" });
+                    enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
                 }
             } else {
                 enqueueSnackbar("Erro inesperado", { variant: "error" });
             }
-        });
+        })
     };
+
+    useEffect(() => {
+    if (id) {
+        setLoading(true);
+        api.get(`usuario/${usuario_id}`)
+            .then((response) => {
+                const usuario = response.data;
+                reset({
+                    nomeCompleto: usuario.nomeCompleto,
+                    email: usuario.email,
+                    dataUpdate: usuario.dataUpdate
+                });
+            })
+            .catch((error) => 
+                {enqueueSnackbar(`Erro ao carregar usuário : ${error}`, {variant: "error",anchorOrigin: { vertical: "bottom", horizontal: "right" },
+            });
+        })
+        .finally(() => setLoading(false));
+    }
+    }, []) 
+
+  const dataAlteracaoField = watch("dataUpdate");
 
     return (
         <section className={styled.appContainer}>
-            <HeaderForm title={"Novo Usuário"} />
-            <form onSubmit={handleSubmit(createUser)} onKeyDown={handleKeyDown} autoComplete="off">
+            <HeaderForm title={"Editar Usuário"} />
+            <form onSubmit={handleSubmit(editUsuario)} onKeyDown={handleKeyDown} autoComplete="off">
                 <div className={styled.row}>
                     <InputField
+                        obrigatorio
                         idInput="nomeCompleto"
                         idDiv={styled.fullNameField}
-                        label="Nome Completo*"
+                        label="Nome Completo"
                         type="text"
                         register={register}
                         error={errors?.nomeCompleto}
                     />
                     <InputField
+                        obrigatorio
                         idInput="email"
+                        readOnly
                         idDiv={styled.emailField}
-                        label="E-mail*"
+                        label="E-mail"
                         type="email"
                         register={register}
                         error={errors?.email}
@@ -113,21 +135,23 @@ const UserForm = () => {
                     <InputPassword
                         idInput="senha"
                         idDiv={styled.passwordField}
-                        label="Senha*"
+                        label="Senha (Se não quiser alterar a senha, deixe  em branco)"
                         type="password"
+                        autoComplete="new-password"
                         register={register}
                         error={errors?.senha}
                     />
                     <InputPassword
                         idInput="confirmarSenha"
                         idDiv={styled.confirmPasswordField}
-                        label="Confirme a Senha*"
+                        label="Confirme a Senha"
                         type="password"
                         register={register}
+                        autoComplete="new-password"
                         error={errors?.confirmarSenha}
                     />
                 </div>
-                <FooterForm />
+                <FooterForm title={"Editar"} updateDateField={dataAlteracaoField} />
             </form>
         </section>
     );

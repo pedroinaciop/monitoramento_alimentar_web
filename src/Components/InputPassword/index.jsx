@@ -4,6 +4,7 @@ import styled from './InputPassword.module.css';
 import React from 'react';
 
 function InputPassword({
+    obrigatorio,
     idInput,
     idDiv,
     label,
@@ -27,7 +28,7 @@ function InputPassword({
     return (
         <section className={styled.formGroup} id={idDiv}>
             {isCapsLockOn && <p className={styled.capsLockWarning}>Caps Lock Ativado</p>}
-            <label htmlFor={idInput}>{label}</label>
+            <label htmlFor={idInput}>{label}{obrigatorio === true ? <span className={styled.obrigatorio}>*</span> : null}</label>
             <input
                 id={idInput}
                 autoComplete={autoComplete}

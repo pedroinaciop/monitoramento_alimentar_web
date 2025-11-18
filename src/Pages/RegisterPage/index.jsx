@@ -100,6 +100,7 @@ const RegisterUser = () => {
                         idDiv={styled.passwordField}
                         label={"Senha"}
                         maxLength={30}
+                        autoComplete="new-password"
                         suggested={"new-password"}
                         type="password"
                         placeholder={"Insira a senha"}

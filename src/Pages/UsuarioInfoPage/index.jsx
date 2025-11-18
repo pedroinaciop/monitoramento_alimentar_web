@@ -1,7 +1,6 @@
 import { DownloadOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { ConfigProvider, Input, Button } from 'antd';
+import { ConfigProvider, Input, Button, Modal } from 'antd';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { confirmDelete } from '../../utils/delete';
 import styled from './UsuarioInfoPage.module.css';
 import { downloadExcel } from '../../utils/downloadExcel';
 import ProTable from '@ant-design/pro-table';
@@ -10,7 +9,6 @@ import ptBR from 'antd/lib/locale/pt_BR';
 import { useSnackbar } from 'notistack';
 import api from '../../services/api';
 import { Grid } from "antd";
-
 
 const UsuarioInfoPage = () => {
     const navigate = useNavigate();
@@ -33,7 +31,7 @@ const UsuarioInfoPage = () => {
     };     
 
     const columns = [
-        { title: 'DATA DE REGISTRO', dataIndex: 'dataRegistro', width: 160},
+        { title: "DATA DE REGISTRO", dataIndex: "dataRegistro", width: screens.sm ? 200 : 155},
         { title: 'IDADE', dataIndex: 'idade', responsive: ['sm']},
         { title: 'GÊNERO', dataIndex: 'sexoBiologico', responsive: ['md']},
         { title: 'NÍVEL ATIVIDADE FÍSICA', dataIndex: 'nivelAtividadeFisica', responsive: ['lg']},
@@ -43,12 +41,10 @@ const UsuarioInfoPage = () => {
                 screens.md ? (
                     <div className={styled.botoesGrid}>
                         <Button key="editar" onClick={() => navigate(`/editar/info/usuario/${row.id}`)} icon={<EditOutlined />}>Editar</Button>
-                        <Button key="deletar" onClick={() => confirmDelete(row.id, setUserInfo, "/info/usuarios/", enqueueSnackbar)} icon={<DeleteOutlined />}>Deletar</Button>
                     </div>
                 ) : (
                      <div className={styled.botoesGrid}>
                         <Button key="editar" onClick={() => navigate(`/editar/info/usuario/${row.id}`)} icon={<EditOutlined />}></Button>
-                        <Button key="deletar" onClick={() => confirmDelete(row.id, setUserInfo, "/info/usuarios/", enqueueSnackbar)} icon={<DeleteOutlined />}></Button>
                     </div>
                 )
                 

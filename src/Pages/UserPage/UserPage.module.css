@@ -1,25 +1,11 @@
+@import url("../../App.css");
+
 .mainContent {
     padding: 1.25em 1.25em 0.125em 1.25em;
   
     display: flex;
     flex-direction: column;
     gap: 1.25em;
-  }
-  
-  .header {
-    gap: 1.25em;
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .header h1 {
-    font-size: 1.875rem;
-    font-weight: bold;
-  }
-  
-  .header p {
-    font-size: 0.875rem;
-    align-self: center;
   }
   
   .functions {

@@ -20,10 +20,11 @@ function getItem(label, key, icon, children, pathname) {
 
 const items = [
   getItem('Home', '1', <HomeOutlined />, null, '/home'),
-  getItem('Minhas Informações', '2', <SolutionOutlined />, null, '/info/usuario/'),
-  getItem('Registrar Medidas', '3', <StraightenIcon />, null, '/medidas'),
-  getItem('Registrar Refeições', '4', <RestaurantIcon />, null, '/refeicao'),
-  getItem('Relatórios', '5', <FileOutlined />, null, "/relatorios")
+  getItem('Minha Conta', '2', <UserOutlined />, null, '/usuario'),
+  getItem('Minhas Informações', '3', <SolutionOutlined />, null, '/info/usuario/'),
+  getItem('Registrar Medidas', '4', <StraightenIcon />, null, '/medidas'),
+  getItem('Registrar Refeições', '5', <RestaurantIcon />, null, '/refeicao'),
+  getItem('Relatórios', '6', <FileOutlined />, null, "/relatorios")
 ];
 
 const PainelMenu = () => {
@@ -49,6 +50,7 @@ const PainelMenu = () => {
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem("usuario_id");
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
     navigate("/login"); 
@@ -74,7 +76,7 @@ const PainelMenu = () => {
           ) : (
             <>
               <Avatar size={64} icon={<UserOutlined />} />
-              <p className={styled.userName}>{user}</p>
+              <p className={styled.userName}>{user.slice(0, 18)}</p>
               <Button className={styled.logoutButton} type="primary" danger icon={<LogoutOutlined />} onClick={handleLogout}>
                   Desconectar
               </Button>

@@ -1,41 +1,77 @@
-import {  DownloadOutlined, PlusOutlined, EditOutlined, DeleteOutlined} from "@ant-design/icons";
+import { DownloadOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { NavLink, useNavigate } from "react-router-dom";
 import { downloadExcel } from "../../utils/downloadExcel";
-import { confirmDelete } from "../../utils/delete";
-import { ConfigProvider, Input, Button } from "antd";
+import { ConfigProvider, Input, Button, Modal, Grid } from "antd";
 import styled from "./RefeicaoPage.module.css";
 import ProTable from "@ant-design/pro-table";
 import { useState, useEffect } from "react";
 import ptBR from "antd/lib/locale/pt_BR";
 import { useSnackbar } from "notistack";
 import api from "../../services/api";
-import { Grid } from "antd";
+
+const deleteRegistro = async (id, setList, path, enqueueSnackbar) => {
+  try {
+    await api.delete(`${path}${id}`);
+    setList((prev) => prev.filter((item) => item.id !== id));
+    enqueueSnackbar("Deletado com sucesso!", { 
+      variant: "success", 
+      anchorOrigin: { vertical: "bottom", horizontal: "right" } 
+    });
+  } catch (error) {
+    enqueueSnackbar(error, "Erro ao deletar registro!", { 
+      variant: "error", 
+      anchorOrigin: { vertical: "bottom", horizontal: "right" } 
+    });
+  }
+};
 
 const RefeicaoPage = () => {
+  const { useBreakpoint } = Grid;
   const navigate = useNavigate();
+  const screens = useBreakpoint();
   const { enqueueSnackbar } = useSnackbar();
   const [keywords, setKeywords] = useState("");
   const [alimentos, setAlimentos] = useState([]);
+  const [modal, contextHolder] = Modal.useModal();
   const usuario_id = sessionStorage.getItem("usuario_id");
-  const { useBreakpoint } = Grid;
-  const screens = useBreakpoint();
+
+  const handleConfirmDelete = (id, setList, path, enqueueSnackbar) => {
+    modal.confirm({
+      title: "Confirmar exclusão",
+      content: "Tem certeza que deseja deletar esse registro?",
+      okText: "Sim",
+      okType: "danger",
+      cancelText: "Não",
+      onOk: () => deleteRegistro(id, setList, path, enqueueSnackbar),
+    });
+  };
 
   const columns = [
-    { title: "DATA DE REGISTRO", dataIndex: "dataRegistro", width: 160},
-    { title: "TIPO DE REFEIÇÃO", dataIndex: "tipoRefeicao", responsive: ['sm']},
+    { title: "DATA DE REGISTRO", dataIndex: "dataRegistro", width: screens.sm ? 200 : 155 },
+    { title: "TIPO DE REFEIÇÃO", dataIndex: "tipoRefeicao", responsive: ['sm'] },
     {
       title: 'AÇÕES',
       render: (_, row) => (
         screens.md ? (
-            <div className={styled.botoesGrid}>
-              <Button key="deletar" href={`/refeicao/${row.id}`} onClick={(e) => {e.preventDefault(confirmDelete(row.id, setAlimentos, "/refeicao/", enqueueSnackbar))}} icon={<DeleteOutlined />}>Deletar</Button>
-              <Button key="editar" onClick={() => navigate(`/editar/refeicao/${row.id}`)}icon={<EditOutlined />}>Editar</Button>
-            </div>
+          <div className={styled.botoesGrid}>
+            <Button key="editar" onClick={() => navigate(`/editar/refeicao/${row.id}`)} icon={<EditOutlined />}>Editar</Button>
+            <Button 
+              key="deletar" 
+              onClick={() => handleConfirmDelete(row.id, setAlimentos, "/refeicao/", enqueueSnackbar)} 
+              icon={<DeleteOutlined />}
+            >
+              Deletar
+            </Button>
+          </div>
         ) : (
-            <div className={styled.botoesGrid}>
-              <Button key="deletar" href={`/refeicao/${row.id}`} onClick={(e) => {e.preventDefault(confirmDelete(row.id, setAlimentos, "/refeicao/", enqueueSnackbar))}} icon={<DeleteOutlined />}></Button>
-              <Button key="editar" onClick={() => navigate(`/editar/refeicao/${row.id}`)}icon={<EditOutlined />}></Button>
-            </div>
+          <div className={styled.botoesGrid}>
+            <Button key="editar" onClick={() => navigate(`/editar/refeicao/${row.id}`)} icon={<EditOutlined />} />
+            <Button 
+              key="deletar" 
+              onClick={() => handleConfirmDelete(row.id, setAlimentos, "/refeicao/", enqueueSnackbar)} 
+              icon={<DeleteOutlined />} 
+            />
+          </div>
         )
       ), 
     },
@@ -53,17 +89,17 @@ const RefeicaoPage = () => {
 
   useEffect(() => {
     api.get(`/refeicoes/${usuario_id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(function (resposta) {
-        setAlimentos(resposta.data);
-      })
-      .catch(function (error) {
-        console.error("Erro:", error);
-      });
-  }, []);
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then(function (resposta) {
+      setAlimentos(resposta.data);
+    })
+    .catch(function (error) {
+      console.error("Erro:", error);
+    });
+  }, [usuario_id]);
 
   return (
     <>
@@ -79,7 +115,8 @@ const RefeicaoPage = () => {
             }} 
             className={styled.input} 
             placeholder="Procure um registro" 
-            onSearch={(value) => setKeywords(value)}/>
+            onSearch={(value) => setKeywords(value)}
+          />
           <div className={styled.buttons}>
             <Button className={styled.button} type="primary" icon={<DownloadOutlined />} size="large" onClick={() => downloadExcel('refeicoes', alimentos, enqueueSnackbar)}>
               Baixar Dados
@@ -92,7 +129,9 @@ const RefeicaoPage = () => {
           </div>
         </div>
       </section>
+      
       <ConfigProvider locale={ptBR}>
+        {contextHolder}
         <ProTable
           rowKey="id"
           size="large"
