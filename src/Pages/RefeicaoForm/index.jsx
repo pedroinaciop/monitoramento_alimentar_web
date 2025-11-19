@@ -95,7 +95,7 @@ const RefeicaoForm = () => {
           variant: "success",
           anchorOrigin: { vertical: "bottom", horizontal: "right" },
         });
-      }).catch((error) => {
+      }).catch(() => {
         enqueueSnackbar("Erro ao deletar alimento", {
           variant: "error",
           anchorOrigin: { vertical: "bottom", horizontal: "right" },

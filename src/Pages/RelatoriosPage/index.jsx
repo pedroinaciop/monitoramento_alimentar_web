@@ -68,7 +68,30 @@ const RelatorioPage = () => {
           variant: "success",
           anchorOrigin: { vertical: "bottom", horizontal: "right" },
         });
-      })
+      }).catch((error) => {
+        console.error("Erro ao enviar email:", error);
+        
+        if (error.response && error.response.status === 400) {
+          enqueueSnackbar(error.response.data, {
+            variant: "warning",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        } 
+
+        else if (error.response && error.response.status === 500) {
+          enqueueSnackbar("Sem informações para o período informado. Relatório não gerado!", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
+
+        else {
+          enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
+      });
   };
 
   const createRefeicoesReport = (data) => { 
@@ -95,7 +118,30 @@ const RelatorioPage = () => {
           variant: "success",
           anchorOrigin: { vertical: "bottom", horizontal: "right" },
         });
-      })
+      }).catch((error) => {
+        console.error("Erro ao enviar email:", error);
+        
+        if (error.response && error.response.status === 400) {
+          enqueueSnackbar(error.response.data, {
+            variant: "warning",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        } 
+
+        else if (error.response && error.response.status === 500) {
+          enqueueSnackbar("Sem informações para o período informado. Relatório não gerado!", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
+
+        else {
+          enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
+      });
   };
 
   const enviarEmailMedidas = (data) => { 
@@ -113,15 +159,34 @@ const RelatorioPage = () => {
         }
       )
       .then(() => {
-        enqueueSnackbar("Relatório enviado por e-mail com sucesso!", {
-        variant: "success",
-        anchorOrigin: { vertical: "bottom", horizontal: "right" },
+        enqueueSnackbar("Relatório enviado por e-mail com sucesso!", {variant: "success",anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+      }).catch((error) => {
+        console.error("Erro ao enviar email:", error);
+        
+        if (error.response && error.response.status === 400) {
+          enqueueSnackbar(error.response.data, {
+            variant: "warning",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        } 
+        else if (error.response && error.response.status === 500) {
+          enqueueSnackbar("Sem informações para o período informado. Relatório não enviado!", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
+
+        else {
+          enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
       });
-      })
-  };
+    };
 
   const enviarEmailRefeicoes = (data) => { 
-    api.post(`email/refeicoes`,{
+    api.post(`email/refeicoes`, {
           to: data.to, 
           subject: `Relatório de Refeições - ${formatDateToBrazilian(data.dataInicial, 1)} a ${formatDateToBrazilian(data.dataFinal, 1)}`,
           body: `Segue em anexo o relatório de refeições solicitado do paciente ${nomeUsuario} no período de ${formatDateToBrazilian(data.dataInicial, 1)} a ${formatDateToBrazilian(data.dataFinal, 1)}.`,
@@ -136,10 +201,34 @@ const RelatorioPage = () => {
       )
       .then(() => {
         enqueueSnackbar("Relatório enviado por e-mail com sucesso!", {
-        variant: "success",
-        anchorOrigin: { vertical: "bottom", horizontal: "right" },
-      });
+          variant: "success",
+          anchorOrigin: { vertical: "bottom", horizontal: "right" }
+        });
       })
+      .catch((error) => {
+        console.error("Erro ao enviar email:", error);
+        
+        if (error.response && error.response.status === 400) {
+          enqueueSnackbar(error.response.data, {
+            variant: "warning",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        } 
+
+        else if (error.response && error.response.status === 500) {
+          enqueueSnackbar("Sem informações para o período informado. Relatório não enviado!", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
+
+        else {
+          enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
+            variant: "error",
+            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          });
+        }
+      });
   };
 
   const handleMedidasOk = enviarEmailForm.handleSubmit((data) => {
