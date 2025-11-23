@@ -111,26 +111,26 @@ npm start
 
 ### 🖼️ Prints do Sistema
 
-	Tela de autenticação de usuários
+# Tela de autenticação de usuários
 	
-	![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/logar.png)
-	![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/registro.png)
+![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/logar.png)
+![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/registro.png)
 
-	Painel principal com IMC
+#Painel principal com IMC
 	
-	![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/menu_principal.png)
+![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/menu_principal.png)
 
-	Registro das informações do usuário
+#Registro das informações do usuário
 
-	![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/informacoes_usuario.png)
+![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/informacoes_usuario.png)
 
-	Registro das refeições do usuário
+#Registro das refeições do usuário
 
-	![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/refeicaos.png)
+![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/refeicaos.png)
 
-	Geração de relatórios
+#Geração de relatórios
 	
-	![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/relatorio.png)
+![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/relatorio.png)
 
 ### 📈 Resultados Esperados
 
