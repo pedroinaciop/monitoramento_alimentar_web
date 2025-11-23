@@ -124,6 +124,10 @@ npm start
 
 ![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/informacoes_usuario.png)
 
+#### Registro das medidas do usuário
+
+![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/medidas.png)
+
 #### Registro das refeições do usuário
 
 ![Web](https://raw.githubusercontent.com/pedroinaciop/monitoramento_alimentar/refs/heads/master/src/assets/images/refeicaos.png)
