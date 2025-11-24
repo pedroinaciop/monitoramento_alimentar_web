@@ -87,6 +87,7 @@ const MedidasForm = () => {
   };
 
   const createMedida = (data) => { 
+    setLoading(true);
     api.post("cadastros/medida/novo",{
           dataRegistro: formatDateTimeToBrazilian(data.dataRegistro),
           pesoAtual: data.pesoAtual,
@@ -112,10 +113,7 @@ const MedidasForm = () => {
         }
       )
       .then(function () {
-        enqueueSnackbar("Cadastro realizado com sucesso!", {
-          variant: "success",
-          anchorOrigin: { vertical: "bottom", horizontal: "right" },
-        });
+        enqueueSnackbar("Cadastro realizado com sucesso!", {variant: "success",anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
         navigate("/medidas/");
       })
       .catch(function (error) {
@@ -123,57 +121,28 @@ const MedidasForm = () => {
           if (error.response) {
             enqueueSnackbar(
               `Erro ${error.response.status}: ${error.response.data.message}`,
-              { variant: "error" }
+              { variant: "error", preventDuplicate: true }
             );
           } else if (error.request) {
             enqueueSnackbar("Erro de rede: Servidor não respondeu", {
-              variant: "warning",
+              variant: "warning", preventDuplicate: true
             });
           } else {
             enqueueSnackbar("Erro desconhecido: " + error.message, {
-              variant: "error",
+              variant: "error", preventDuplicate: true
             });
           }
         } else {
-          enqueueSnackbar("Erro inesperado", { variant: "error" });
+          enqueueSnackbar("Erro inesperado", { variant: "error", preventDuplicate: true });
         }
+      })
+      .finally(function() {
+        setLoading(false);
       });
   };
 
-  useEffect(() => {
-    if (id) {
-      setLoading(true);
-      api.get(`/medida/${id}`)
-        .then((response) => {
-          const medidas = response.data;
-          reset({
-            dataRegistro: parseBrazilianDateTimeToISO(medidas.dataRegistro, 3),
-            pesoAtual: medidas.pesoAtual,
-            pesoDesejado: medidas.pesoDesejado,
-            medidaCintura: medidas.medidaCintura,
-            medidaQuadril: medidas.medidaQuadril,
-            medidaTorax: medidas.medidaTorax,
-            medidaBracoDireito: medidas.medidaBracoDireito,
-            medidaBracoEsquerdo: medidas.medidaBracoEsquerdo,
-            medidaCoxaDireita: medidas.medidaCoxaDireita,
-            medidaCoxaEsquerda: medidas.medidaCoxaEsquerda,
-            medidaPanturrilhaDireita: medidas.medidaPanturrilhaDireita,
-            medidaPanturrilhaEsquerda: medidas.medidaPanturrilhaEsquerda,
-            altura: medidas.altura,
-            dataAlteracao: medidas.dataAlteracao,
-          });
-        })
-        .catch((error) => {
-          enqueueSnackbar("Erro ao carregar medidas", {
-            variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" },
-          });
-        })
-        .finally(() => setLoading(false));
-    }
-  }, []);
-
   const editMedida = (data) => {
+    setLoading(true);
     api.put(`/editar/medida/${id}`, {
       dataRegistro: formatDateTimeToBrazilian(data.dataRegistro),
       pesoAtual: data.pesoAtual,
@@ -195,22 +164,53 @@ const MedidasForm = () => {
         }
     })
     .then(function() {
-        enqueueSnackbar("Cadastro editado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+        enqueueSnackbar("Cadastro editado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
         navigate('/medidas');
     }).catch(function(error) {
         if (api.isAxiosError(error)) {
             if (error.response) {
-                enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
             } else if (error.request) {
-                enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
             } else {
-                enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
             }
         } else {
-            enqueueSnackbar("Erro inesperado", { variant: "error" });
+            enqueueSnackbar("Erro inesperado", { variant: "error", preventDuplicate: true });
         }
     })
+    .finally(() => {
+      setLoading(false);
+    });
   };
+
+    useEffect(() => {
+    if (id) {
+      api.get(`/medida/${id}`)
+        .then((response) => {
+          const medidas = response.data;
+          reset({
+            dataRegistro: parseBrazilianDateTimeToISO(medidas.dataRegistro, 3),
+            pesoAtual: medidas.pesoAtual,
+            pesoDesejado: medidas.pesoDesejado,
+            medidaCintura: medidas.medidaCintura,
+            medidaQuadril: medidas.medidaQuadril,
+            medidaTorax: medidas.medidaTorax,
+            medidaBracoDireito: medidas.medidaBracoDireito,
+            medidaBracoEsquerdo: medidas.medidaBracoEsquerdo,
+            medidaCoxaDireita: medidas.medidaCoxaDireita,
+            medidaCoxaEsquerda: medidas.medidaCoxaEsquerda,
+            medidaPanturrilhaDireita: medidas.medidaPanturrilhaDireita,
+            medidaPanturrilhaEsquerda: medidas.medidaPanturrilhaEsquerda,
+            altura: medidas.altura,
+            dataAlteracao: medidas.dataAlteracao,
+          });
+        })
+        .catch((error) => {
+          enqueueSnackbar(error, "Erro ao carregar medidas", {variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
+        })
+    }
+  }, []);
 
   const dataAlteracaoField = watch("dataAlteracao");
   const dataInclusaoField = watch("dataRegistro");
@@ -236,6 +236,7 @@ const MedidasForm = () => {
               />
 
               <InputField
+                defaultValue={0}
                 idInput="altura"
                 idDiv={styled.alturaCampo}
                 label="Altura (m, cm)"
@@ -249,6 +250,7 @@ const MedidasForm = () => {
               />
 
               <InputField
+                defaultValue={0}
                 idInput="pesoAtual"
                 idDiv={styled.pesoAtualCampo}
                 label="Peso Atual (kg)"
@@ -262,6 +264,7 @@ const MedidasForm = () => {
               />
 
               <InputField
+                defaultValue={0}
                 idInput="pesoDesejado"
                 idDiv={styled.pesoDesejadoCampo}
                 label="Peso Desejado (kg)"
@@ -277,6 +280,7 @@ const MedidasForm = () => {
 
             <div className={styled.row}>
               <InputField
+                defaultValue={0}
                 idInput="medidaTorax"
                 idDiv={styled.medidaToraxCampo}
                 label="Medida do Tórax (cm)"
@@ -290,6 +294,7 @@ const MedidasForm = () => {
               />
 
               <InputField
+                defaultValue={0}
                 idInput="medidaCintura"
                 idDiv={styled.medidaCinturaCampo}
                 label="Medida da Cintura (cm)"
@@ -303,6 +308,7 @@ const MedidasForm = () => {
               />
 
               <InputField
+                defaultValue={0}
                 idInput="medidaQuadril"
                 idDiv={styled.medidaQuadrilCampo}
                 label="Medida do Quadril (CM)"
@@ -318,6 +324,7 @@ const MedidasForm = () => {
 
             <div className={styled.row}>
               <InputField
+                defaultValue={0}
                 idInput="medidaBracoEsquerdo"
                 idDiv={styled.medidaBracoEsquerdoCampo}
                 label="Medida do Braço Esquerdo (cm)"
@@ -331,6 +338,7 @@ const MedidasForm = () => {
               />
               
               <InputField
+                defaultValue={0}
                 idInput="medidaBracoDireito"
                 idDiv={styled.medidaBracoDireitoCampo}
                 label="Medida do Braço Direito (cm)"
@@ -346,6 +354,7 @@ const MedidasForm = () => {
 
             <div className={styled.row}>
               <InputField
+                defaultValue={0}
                 idInput="medidaCoxaEsquerda"
                 idDiv={styled.medidaCoxaEsquerdaCampo}
                 label="Medida da Coxa Esquerda (cm)"
@@ -359,6 +368,7 @@ const MedidasForm = () => {
               />
 
               <InputField
+                defaultValue={0.0}
                 idInput="medidaCoxaDireita"
                 idDiv={styled.medidaCoxaDireitaCampo}
                 label="Medida da Coxa Direita (cm)"
@@ -374,6 +384,7 @@ const MedidasForm = () => {
 
             <div className={styled.row}>
               <InputField
+                defaultValue={0}
                 idInput="medidaPanturrilhaEsquerda"
                 idDiv={styled.medidaPanturrilhaEsquerdaCampo}
                 label="Medida da Panturrilha Esquerda (cm)"
@@ -387,6 +398,7 @@ const MedidasForm = () => {
               />
 
               <InputField
+                defaultValue={0}
                 idInput="medidaPanturrilhaDireita"
                 idDiv={styled.medidaPanturrilhaDireitaCampo}
                 label="Medida da Panturrilha Direita (cm)"
@@ -404,7 +416,7 @@ const MedidasForm = () => {
             <img className={styled.imagem} src={medidas} alt="Imagem de referência das medidas do corpo humano"/>
           </figure>
         </main>
-        <FooterForm title={id ? "Editar" : "Cadastrar"} updateDateField={dataAlteracaoField} dataInclusaoField={dataInclusaoField}/>
+        <FooterForm title={id ? (loading ? "Editando..." : "Editar") : (loading ? "Cadastrando..." : "Cadastrar")} updateDateField={dataAlteracaoField} dataInclusaoField={dataInclusaoField} disabled={loading}/>
       </form>
     </section>
   );

@@ -83,6 +83,7 @@ const UsuarioInfoForm = () => {
     useEffect(() => setValue("idade", idadeCalculada), [idadeCalculada, setValue]);
 
     const editInfoUsuario = (data) => {
+        setLoading(true);
         api.put(`/editar/info/usuarios/${id}`, {
             dataNascimento: formatDateToISODate(data.dataNascimento, 1),
             idade: data.idade,
@@ -100,24 +101,27 @@ const UsuarioInfoForm = () => {
             }
         })
         .then(function() {
-            enqueueSnackbar("Cadastro editado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+            enqueueSnackbar("Cadastro editado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
             navigate('/info/usuario');
         }).catch(function(error) {
             if (api.isAxiosError(error)) {
                 if (error.response) {
-                    enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                    enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
                 } else if (error.request) {
-                    enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                    enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
                 } else {
-                    enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                    enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
                 }
             } else {
-                enqueueSnackbar("Erro inesperado", { variant: "error" });
+                enqueueSnackbar("Erro inesperado", { variant: "error", preventDuplicate: true });
             }
+        }).finally(function() {
+            setLoading(false);
         })
     };
 
     const createInfoUser = (data) => {
+        setLoading(true);
         api.post('cadastros/info/usuarios/novo', {
             dataRegistro: formattedDateTime,
             dataNascimento: formatDateToISODate(data.dataNascimento, 1),
@@ -138,34 +142,35 @@ const UsuarioInfoForm = () => {
             }
         })
         .then(function () {
-            enqueueSnackbar("Cadastro realizado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+            enqueueSnackbar("Cadastro realizado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
             navigate('/info/usuario/')
         })
         .catch(function (error) {
             if (api.isAxiosError(error)) {
                 if (error.response) {
-                    enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error" });
+                    enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", preventDuplicate: true });
                 } else if (error.request) {
-                    enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning" });
+                    enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", preventDuplicate: true });
                 } else {
-                    enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error" });
+                    enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", preventDuplicate: true });
                 }
             } else {
-                enqueueSnackbar("Erro inesperado", { variant: "error" });
+                enqueueSnackbar("Erro inesperado", { variant: "error", preventDuplicate: true });
             }
+        })
+        .finally(function() {
+            setLoading(false);
         });
     };
 
     useEffect(() => {
         if (id) {
-            setLoading(true);
             api.get(`info/usuarios/${usuario_id}`)
                 .then(response => {
                     const infoUser = response.data;
                     const parseToArray = (field) => {
                         if (!field) return [];
                         if (typeof field === "string") {
-                            // evita incluir textos genéricos como 'Sem alergias'
                             if (field.startsWith("Sem ")) return [];
                             return field.split(",").map(item => item.trim());
                         }
@@ -187,9 +192,8 @@ const UsuarioInfoForm = () => {
                     });
                 })
                 .catch(error => {
-                    enqueueSnackbar("Erro ao carregar categoria", { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right"}});
+                    enqueueSnackbar(error, "Erro ao carregar categoria", { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
                 })
-                .finally(() => setLoading(false));
             }
     }, []);
 
@@ -306,7 +310,7 @@ const UsuarioInfoForm = () => {
                         />
                     </div>
                 </section>
-                <FooterForm title={ id ? "Editar" : "Cadastrar"} includeDateField={dataRegistroField} updateDateField={dataAlteracaoField}/>
+                <FooterForm title={ id ? (loading ? "Editando..." : "Editar") : (loading ? "Cadastrando..." : "Cadastrar")} includeDateField={dataRegistroField} updateDateField={dataAlteracaoField} disabled={loading}/>
             </form>
         </section>
     );

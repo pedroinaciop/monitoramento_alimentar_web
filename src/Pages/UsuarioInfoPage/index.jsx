@@ -92,7 +92,7 @@ const UsuarioInfoPage = () => {
                             Baixar Dados
                         </Button>
                         {userInfo.length > 0 ? (
-                            <Button className={styled.button} type="primary" icon={<PlusOutlined />} size="large" onClick={() => enqueueSnackbar('Informações já cadastradas. Edite o registro existente para fazer alterações.', { variant: 'info', anchorOrigin: { vertical: "bottom", horizontal: "right" } })}>
+                            <Button className={styled.button} type="primary" icon={<PlusOutlined />} size="large" onClick={() => enqueueSnackbar('Informações já cadastradas. Edite o registro existente para fazer alterações.', { variant: 'info', anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }})}>
                                 Registro
                              </Button>
                         ) : (

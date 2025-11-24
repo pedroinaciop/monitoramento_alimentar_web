@@ -1,7 +1,7 @@
 import styled from './ButtonForm.module.css';
-const ButtonForm = ({ text, type }) => {
+const ButtonForm = ({ text, type, disabled }) => {
     return (
-        <button type={type} className={text === "Limpar" ? styled.btnLimpar : styled.btnRegister } >
+        <button type={type} className={text === "Limpar" ? styled.btnLimpar : styled.btnRegister} disabled={disabled} >
             {text}
         </button>
     ); 

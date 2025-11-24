@@ -1,10 +1,10 @@
 
-import styled from './HomePage.module.css';
-import api from '../../services/api';
-import infoIcon from '../../assets/images/info.png';
-import { useEffect, useState } from 'react';
 import { Modal } from 'antd';
+import api from '../../services/api';
+import { useEffect, useState } from 'react';
 import { enqueueSnackbar } from 'notistack';
+import styled from './HomePage.module.css';
+import infoIcon from '../../assets/images/info.png';
 
 const HomePage = () => {
     const [open, setOpen] = useState(false);
@@ -22,14 +22,18 @@ const HomePage = () => {
                 setImcValue(response.data);
 
                 if (response.data <= 0) {
-                     enqueueSnackbar("Medidas não cadastradas. Por favor, registre sua medidas para que o calculo do IMC seja realizado.", { variant: "info", anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+                    enqueueSnackbar("Medidas não cadastradas. Por favor, registre sua medidas para que o calculo do IMC seja realizado.", { 
+                        variant: "info", 
+                        anchorOrigin: { vertical: "bottom", horizontal: "right" },
+                        preventDuplicate: true 
+                    });
                 }
             })
             .catch(error => {
                 console.error('Erro ao buscar dados do usuário:', error);
             });
     }, [usuario_id]);
-
+    
     return (
         <section className={styled.mainContent}>
               <header className={styled.header}>    

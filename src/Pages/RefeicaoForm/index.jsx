@@ -77,34 +77,30 @@ const RefeicaoForm = () => {
     );
   };
 
-  // Função para deletar alimento
   const deleteAlimento = (id) => {
     if (!id) {
-      // Se não tem ID (alimento não salvo no banco), apenas remove da lista local
       setAlimentos((prev) => prev.filter((item) => item.id !== id));
       enqueueSnackbar("Deletado com sucesso!", { 
         variant: "success",
-        anchorOrigin: { vertical: "bottom", horizontal: "right" }
+        anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
       });
       return;
     } else {
-      // Se tem ID, faz requisição para API
       api.delete(`/alimento/${id}`).then(() => {
         setAlimentos((prev) => prev.filter((item) => item.id !== id));
         enqueueSnackbar("Deletado com sucesso!", {
           variant: "success",
-          anchorOrigin: { vertical: "bottom", horizontal: "right" },
+          anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true },
         });
       }).catch(() => {
         enqueueSnackbar("Erro ao deletar alimento", {
           variant: "error",
-          anchorOrigin: { vertical: "bottom", horizontal: "right" },
+          anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true},
         });
       });
     }
   };
 
-  // Função para confirmar exclusão usando useModal
   const handleConfirmDelete = (id) => {
     modal.confirm({
       title: "Confirmar exclusão",
@@ -160,6 +156,7 @@ const RefeicaoForm = () => {
   }, [open]);
 
   const createRefeicao = (data) => {
+    setLoading(true);
     api.post("/cadastro/refeicao/novo", {
           dataRegistro: formatDateTimeToBrazilian(data.dataRegistro),
           tipoRefeicao: data.tipoRefeicao,
@@ -181,7 +178,7 @@ const RefeicaoForm = () => {
       .then(function () {
         enqueueSnackbar("Cadastro realizado com sucesso!", {
           variant: "success",
-          anchorOrigin: { vertical: "bottom", horizontal: "right" },
+          anchorOrigin: { vertical: "bottom", horizontal: "right" , preventDuplicate: true},
         });
         navigate("/refeicao/");
       })
@@ -190,24 +187,28 @@ const RefeicaoForm = () => {
           if (error.response) {
             enqueueSnackbar(
               `Erro ${error.response.status}: ${error.response.data.message}`,
-              { variant: "error" }
+              { variant: "error", preventDuplicate: true }
             );
           } else if (error.request) {
             enqueueSnackbar("Erro de rede: Servidor não respondeu", {
-              variant: "warning",
+              variant: "warning", preventDuplicate: true
             });
           } else {
             enqueueSnackbar("Erro desconhecido: " + error.message, {
-              variant: "error",
+              variant: "error", preventDuplicate: true
             });
           }
         } else {
-          enqueueSnackbar("Erro inesperado", { variant: "error" });
+          enqueueSnackbar("Erro inesperado", { variant: "error", preventDuplicate: true });
         }
+      })
+      .finally(function() {
+        setLoading(false);
       });
   };
 
   const editRefeicao = (data) => {
+    setLoading(true);
     api.put(`/editar/refeicao/${id}`, {
       id: data.id,
       dataRegistro: formatDateTimeToBrazilian(data.dataRegistro),
@@ -225,20 +226,22 @@ const RefeicaoForm = () => {
         }
     })
     .then(function() {
-        enqueueSnackbar("Cadastro editado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+        enqueueSnackbar("Cadastro editado com sucesso!", { variant: "success", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
         navigate('/refeicao');
     }).catch(function(error) {
         if (api.isAxiosError(error)) {
             if (error.response) {
-                enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                enqueueSnackbar(`Erro ${error.response.status}: ${error.response.data.message}`, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
             } else if (error.request) {
-                enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                enqueueSnackbar("Erro de rede: Servidor não respondeu", { variant: "warning", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
             } else {
-                enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right" } });
+                enqueueSnackbar("Erro desconhecido: " + error.message, { variant: "error", anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
             }
         } else {
-            enqueueSnackbar("Erro inesperado", { variant: "error" });
+            enqueueSnackbar("Erro inesperado", { variant: "error", preventDuplicate: true });
         }
+    }).finally (function() {
+      setLoading(false);
     })
   };
 
@@ -281,7 +284,6 @@ const RefeicaoForm = () => {
 
   useEffect(() => {
     if (id) {
-        setLoading(true);
         api.get(`/refeicao/${id}`)
           .then((response) => {
             const refeicao = response.data;
@@ -296,10 +298,9 @@ const RefeicaoForm = () => {
           .catch((error) => {
             enqueueSnackbar(`Erro ao carregar medidas : ${error}`, {
               variant: "error",
-              anchorOrigin: { vertical: "bottom", horizontal: "right" },
+              anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true },
             });
-          })
-          .finally(() => setLoading(false));
+          });
       }
   }, [id, reset, enqueueSnackbar]) 
 
@@ -424,7 +425,7 @@ const RefeicaoForm = () => {
             </button>
           </div>
         </section>
-        <FooterForm title={ id ? "Editar" : "Cadastrar"} updateDateField={dataAlteracaoField}/>
+        <FooterForm title={id ? ( loading ? "Editando..." : "Editar" ) : (loading ? "Cadastrando..." : "Cadastrar")} updateDateField={dataAlteracaoField} disabled={loading}/>
       </form>
     </section>
   );

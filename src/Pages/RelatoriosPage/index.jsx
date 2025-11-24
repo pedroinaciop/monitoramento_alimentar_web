@@ -15,6 +15,7 @@ const RelatorioPage = () => {
   const usuario_id = sessionStorage.getItem("usuario_id");
   const nomeUsuario = sessionStorage.getItem("user");
   const [expandIconPosition, setExpandIconPosition] = useState('start');
+  const [loading, setLoading] = useState(false);
   const [openEmailMedidas, setOpenEmailMedidas] = useState(false);
   const [openEmailRefeicoes, setOpenEmailRefeicoes] = useState(false);
 
@@ -45,6 +46,7 @@ const RelatorioPage = () => {
   };
 
   const createMedidaReport = (data) => { 
+    setLoading(true);
     api.post("relatorios/medidas/download",{
           usuarioId: usuario_id,
           dataInicial: formatDateToISODate(data.dataInicial, 1),
@@ -66,7 +68,7 @@ const RelatorioPage = () => {
 
         enqueueSnackbar("Relatório gerado com sucesso!", {
           variant: "success",
-          anchorOrigin: { vertical: "bottom", horizontal: "right" },
+          anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true },
         });
       }).catch((error) => {
         console.error("Erro ao enviar email:", error);
@@ -74,27 +76,30 @@ const RelatorioPage = () => {
         if (error.response && error.response.status === 400) {
           enqueueSnackbar(error.response.data, {
             variant: "warning",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         } 
 
         else if (error.response && error.response.status === 500) {
           enqueueSnackbar("Sem informações para o período informado. Relatório não gerado!", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         }
 
         else {
           enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         }
+      }).finally(function() {
+          setLoading(false);
       });
   };
 
   const createRefeicoesReport = (data) => { 
+    setLoading(true);
     api.post("relatorios/refeicoes/download",{
           usuarioId: usuario_id,
           dataInicial: formatDateToISODate(data.dataInicial, 1),
@@ -116,7 +121,7 @@ const RelatorioPage = () => {
 
         enqueueSnackbar("Relatório gerado com sucesso!", {
           variant: "success",
-          anchorOrigin: { vertical: "bottom", horizontal: "right" },
+          anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true },
         });
       }).catch((error) => {
         console.error("Erro ao enviar email:", error);
@@ -124,27 +129,30 @@ const RelatorioPage = () => {
         if (error.response && error.response.status === 400) {
           enqueueSnackbar(error.response.data, {
             variant: "warning",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         } 
 
         else if (error.response && error.response.status === 500) {
           enqueueSnackbar("Sem informações para o período informado. Relatório não gerado!", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right" , preventDuplicate: true}
           });
         }
 
         else {
           enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         }
+      }).finally(function() {
+          setLoading(false);
       });
   };
 
   const enviarEmailMedidas = (data) => { 
+    setLoading(true);
     api.post(`email/medidas`,{
           to: data.to, 
           subject: `Relatório de Medidas - ${formatDateToBrazilian(data.dataInicial, 1)} a ${formatDateToBrazilian(data.dataFinal, 1)}`,
@@ -159,33 +167,36 @@ const RelatorioPage = () => {
         }
       )
       .then(() => {
-        enqueueSnackbar("Relatório enviado por e-mail com sucesso!", {variant: "success",anchorOrigin: { vertical: "bottom", horizontal: "right" }});
+        enqueueSnackbar("Relatório enviado por e-mail com sucesso!", {variant: "success",anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }});
       }).catch((error) => {
         console.error("Erro ao enviar email:", error);
         
         if (error.response && error.response.status === 400) {
           enqueueSnackbar(error.response.data, {
             variant: "warning",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         } 
         else if (error.response && error.response.status === 500) {
           enqueueSnackbar("Sem informações para o período informado. Relatório não enviado!", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         }
 
         else {
           enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         }
+      }).finally(function() {
+          setLoading(false);
       });
-    };
+  };
 
-  const enviarEmailRefeicoes = (data) => { 
+  const enviarEmailRefeicoes = (data) => {
+    setLoading(true); 
     api.post(`email/refeicoes`, {
           to: data.to, 
           subject: `Relatório de Refeições - ${formatDateToBrazilian(data.dataInicial, 1)} a ${formatDateToBrazilian(data.dataFinal, 1)}`,
@@ -202,7 +213,7 @@ const RelatorioPage = () => {
       .then(() => {
         enqueueSnackbar("Relatório enviado por e-mail com sucesso!", {
           variant: "success",
-          anchorOrigin: { vertical: "bottom", horizontal: "right" }
+          anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
         });
       })
       .catch((error) => {
@@ -211,23 +222,25 @@ const RelatorioPage = () => {
         if (error.response && error.response.status === 400) {
           enqueueSnackbar(error.response.data, {
             variant: "warning",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         } 
 
         else if (error.response && error.response.status === 500) {
           enqueueSnackbar("Sem informações para o período informado. Relatório não enviado!", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         }
 
         else {
           enqueueSnackbar("Erro ao enviar relatório por e-mail.", {
             variant: "error",
-            anchorOrigin: { vertical: "bottom", horizontal: "right" }
+            anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true }
           });
         }
+      }).finally(function() {
+          setLoading(false);
       });
   };
 
@@ -310,7 +323,7 @@ const RelatorioPage = () => {
                 footer={(_, { CancelBtn }) => (
                   <>
                     <CancelBtn/>
-                    <Button type="primary" onClick={handleMedidasOk} >
+                    <Button type="primary" onClick={handleMedidasOk}>
                       Enviar
                     </Button>
                   </>
@@ -357,7 +370,7 @@ const RelatorioPage = () => {
               </Modal>
             <div className={styled.btnGroup}>
               <button type="button" className={styled.btnRegister} onClick={showMedidasModal}>Enviar por e-mail</button>
-              <button type="submit" className={styled.btnRegister}>Gerar relatório</button>
+              <button type="submit" className={styled.btnRegister} disabled={loading}>Gerar relatório</button>
             </div>
           </section>
         </main>
@@ -455,7 +468,7 @@ const RelatorioPage = () => {
             </div>
             <div className={styled.btnGroup}>
               <button type="button" className={styled.btnRegister} onClick={showRefeicoesModal}>Enviar por e-mail</button>
-              <button type="submit" className={styled.btnRegister}>Gerar relatório</button>
+              <button type="submit" className={styled.btnRegister} disabled={loading}>Gerar relatório</button>
             </div>
           </section>
         </main>

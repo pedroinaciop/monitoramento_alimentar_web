@@ -15,12 +15,12 @@ const deleteRegistro = async (id, setList, path, enqueueSnackbar) => {
     setList((prev) => prev.filter((item) => item.id !== id));
     enqueueSnackbar("Deletado com sucesso!", { 
       variant: "success", 
-      anchorOrigin: { vertical: "bottom", horizontal: "right" } 
+      anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } 
     });
   } catch (error) {
     enqueueSnackbar(error, "Erro ao deletar registro!", { 
       variant: "error", 
-      anchorOrigin: { vertical: "bottom", horizontal: "right" } 
+      anchorOrigin: { vertical: "bottom", horizontal: "right", preventDuplicate: true } 
     });
   }
 };

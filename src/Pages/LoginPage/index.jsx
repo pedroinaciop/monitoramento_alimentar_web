@@ -12,6 +12,7 @@ import { enqueueSnackbar } from "notistack";
 
 const LoginUser = () => {
     const [errorAPI, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const user = sessionStorage.getItem("user");
@@ -30,21 +31,22 @@ const LoginUser = () => {
     });
 
     const logar = (data) => {
-            api.post('auth/login', {
-                login: data.usuario,
-                senha: data.senha
-            })
-            .then(response => {
-                navigate("/home");
-                sessionStorage.setItem("user", response.data.user);
-                sessionStorage.setItem("token", response.data.token);
-                sessionStorage.setItem("usuario_id", response.data.id_usuario);
+        setLoading(true);
+        api.post('auth/login', {
+            login: data.usuario,
+            senha: data.senha
+        })
+        .then(response => {
+            navigate("/home");
+            sessionStorage.setItem("user", response.data.user);
+            sessionStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("usuario_id", response.data.id_usuario);
 
-                enqueueSnackbar("Login realizado com sucesso!", { variant: "success", anchorOrigin : { vertical: "bottom", horizontal: "right" } });
-            })
-            .catch(error => {
-                setError(error.response?.data);
-            });
+            enqueueSnackbar("Login realizado com sucesso!", { variant: "success", anchorOrigin : { vertical: "bottom", horizontal: "right" }, preventDuplicate: true  });
+        })
+        .catch(error => {
+            setError(error.response?.data);
+        });
     };
 
     return (
@@ -78,7 +80,7 @@ const LoginUser = () => {
                         register={register}
                         error={errors?.senha}
                     />
-                    <button type="submit" className={styled.submitButton}>ACESSAR</button>
+                    <button type="submit" className={styled.submitButton} disabled={loading}>{loading ? "ACESSANDO..." : "ACESSAR"}</button>
                     <p className={styled.registerMessage}>Não possui uma conta? <a href="/register">Cadastre-se</a></p>
                 </form>
             </div>

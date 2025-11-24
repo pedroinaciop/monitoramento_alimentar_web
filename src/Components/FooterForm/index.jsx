@@ -3,12 +3,12 @@ import InputField from '../../Components/InputField';
 import styled from './FooterForm.module.css'
 import { useForm } from 'react-hook-form';
 
-const FooterForm = ({updateDateField, includeDateField, title}) => {
+const FooterForm = ({updateDateField, includeDateField, title, disabled}) => {
     const { register } = useForm();
     return (
         <footer className={styled.footer}>
             <div className={styled.buttons}>
-                <ButtonForm type="submit" text={title} />
+                <ButtonForm type="submit" text={title} disabled={disabled}/>
                 <ButtonForm type="reset" text="Limpar" />
             </div>
             <div className={styled.updates}>

@@ -11,9 +11,10 @@ import { useState } from "react";
 import { z } from "zod";
 
 const RegisterUser = () => {
-    const [errorAPI, setError] = useState(null);
-    const navigate = useNavigate();
     const updateDate = new Date();
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const [errorAPI, setError] = useState(null);
     const formattedDate = `${updateDate.toLocaleDateString('pt-BR')} ${updateDate.toLocaleTimeString('pt-BR')}`;
 
     const logOnSchema = z.object({
@@ -47,20 +48,23 @@ const RegisterUser = () => {
     });
 
     const registrar = (data) => {
-            api.post('auth/register', {
-                nomeCompleto: data.nomeCompleto,
-                login: data.email,
-                senha: data.senha,
-                regra: 1,
-                dataCriacao: formattedDate
-            })
-            .then(response => {
-                navigate("/login");
-                enqueueSnackbar("Cadastro realizado com sucesso, faça o Login e aproveite!", { variant: "success", anchorOrigin : { vertical: "bottom", horizontal: "right" } });
-            })
-            .catch(error => {
-                setError(error.response?.data);
-            });
+        setLoading(true);
+        api.post('auth/register', {
+            nomeCompleto: data.nomeCompleto,
+            login: data.email,
+            senha: data.senha,
+            regra: 1,
+            dataCriacao: formattedDate
+        })
+        .then(() => {
+            navigate("/login");
+            enqueueSnackbar("Cadastro realizado com sucesso, faça o Login e aproveite!", { variant: "success", anchorOrigin : { vertical: "bottom", horizontal: "right", preventDuplicate: true } });
+        })
+        .catch(error => {
+            setError(error.response?.data);
+        }).finally(function() {
+          setLoading(false);
+      });
     };
 
     return (
@@ -119,7 +123,7 @@ const RegisterUser = () => {
                         register={register}
                         error={errors?.confirmaSenha}
                     />
-                    <button type="submit" className={styled.submitButton}>CADASTRAR</button>
+                    <button type="submit" className={styled.submitButton} disabled={loading}>{loading ? "CADASTRANDO..." : "CADASTRAR"}</button>
                     <p className={styled.registerMessage}>Já possui uma conta? <a href="/login">Faça login</a></p>
                 </form>
             </div>
