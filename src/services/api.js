@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://tccbackend-production.up.railway.app/api/",
+  baseURL: "https://monitoramento-alimentar-api.onrender.com/api/",
   //baseURL: "http://localhost:8080/api/",
 });
 
